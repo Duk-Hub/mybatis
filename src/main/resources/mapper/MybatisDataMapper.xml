@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.orm.mybatis.mapper.MybatisDataMapper">
+
+    <resultMap id="mybatisDataResultMap" type="MybatisData">
+        <id property="id" column="id"/>
+        <result property="title" column="title"/>
+        <result property="content" column="content"/>
+        <result property="isDeleted" column="is_deleted"/>
+    </resultMap>
+
+    <insert id="insert"
+            parameterType="MybatisData"
+            useGeneratedKeys="true"
+            keyProperty="id">
+        INSERT INTO mybatis_data (
+            title,
+            content
+        )
+        VALUES (
+                   #{title},
+                   #{content}
+               )
+    </insert>
+
+    <select id="findById"
+            parameterType="long"
+            resultMap="mybatisDataResultMap">
+        SELECT
+            id,
+            title,
+            content,
+            is_deleted
+        FROM mybatis_data
+        WHERE id = #{id}
+          AND is_deleted = false
+    </select>
+
+    <select id="findAll"
+            resultMap="mybatisDataResultMap">
+        SELECT
+            id,
+            title,
+            content,
+            is_deleted
+        FROM mybatis_data
+        WHERE is_deleted = false
+        ORDER BY id DESC
+    </select>
+
+    <update id="update"
+            parameterType="MybatisData">
+        UPDATE mybatis_data
+        SET
+            title = #{title},
+            content = #{content}
+        WHERE id = #{id}
+          AND is_deleted = false
+    </update>
+
+    <update id="softDelete"
+            parameterType="long">
+        UPDATE mybatis_data
+        SET is_deleted = true
+        WHERE id = #{id}
+          AND is_deleted = false
+    </update>
+</mapper>
